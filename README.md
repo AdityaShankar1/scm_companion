@@ -1,6 +1,10 @@
 # SCM Companion: AI-Driven Supply Chain & Logistics Optimizer
 SCM Companion is a full-stack supply chain management platform deployed on Google Cloud Platform (GCP). It leverages geospatial intelligence and machine learning to optimize inventory and logistics, providing a real-time dashboard for asset tracking and market forecasting.
 
+## Problem Statement & Proposed Solution:
+Fragmented data causes inefficient logistics management, failing to anticipate market fluctuations.
+This is a GCP-hosted platform integrating FastAPI, PostGIS, and PyTorch models within a containerized Docker architecture, enabling proactive decision-making via automated forecasting and optimized routing to reduce transit costs and stockouts.
+
 ## 🚀 Features
 
 Cloud-Native Deployment: Professionally hosted on GCP Compute Engine using a custom-configured VPC and firewall.
