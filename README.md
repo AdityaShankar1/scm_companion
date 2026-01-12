@@ -69,7 +69,7 @@ Swagger UI: http://34.100.228.234//docs
 ## Screenshots:
 
 ### Login:
-<img width="1470" height="956" alt="Screenshot 2026-01-13 at 12 52 53 AM" src="https://github.com/user-attachments/assets/dbbd1531-4a50-4db6-b446-649b22b6fd80" />
+<img width="1470" height="956" alt="Screenshot 2026-01-13 at 3 10 32 AM" src="https://github.com/user-attachments/assets/3f90b67c-3f69-4674-86d4-318d72f5de08" />
 
 ### Main Page:
 <img width="1470" height="956" alt="Screenshot 2026-01-13 at 12 46 00 AM" src="https://github.com/user-attachments/assets/1ffa2a37-33b7-4a10-a846-8f7e6d474149" />
