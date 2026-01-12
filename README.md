@@ -60,7 +60,7 @@ sudo docker-compose exec web python scripts/init_db.py
 ## 🔌 API Documentation
 The production API is accessible via:
 
-Swagger UI: http://https://34.100.228.234//docs
+Swagger UI: http://34.100.228.234//docs
 
 ## Screenshots:
 
