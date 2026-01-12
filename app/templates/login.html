@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SCM Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #0f172a; /* Fallback color */
+        }
+
+        /* Using the Aerial Port background for login */
+        .bg-image {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.85)),
+                              url('/static/bg.jpg'); /* This refers to your aerial port image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* Enhanced Glassmorphism for WCAG Contrast */
+        .login-card {
+            background: rgba(15, 23, 42, 0.8); /* Darker base for better text contrast */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 440px;
+            color: #f8fafc;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Improved Label Contrast (WCAG 1.4.3) */
+        .form-label {
+            color: #cbd5e1; /* Lighter gray for 4.5:1 contrast ratio */
+            letter-spacing: 0.025em;
+        }
+
+        .form-control {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+        }
+
+        /* Visual Focus State (WCAG 2.4.7) */
+        .form-control:focus {
+            background: rgba(2, 6, 23, 0.9);
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            border: none;
+            padding: 0.8rem;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .error-msg {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            color: #fca5a5;
+            padding: 12px;
+            font-size: 0.875rem;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .version-tag {
+            color: #94a3b8; /* Better contrast than previous 50% opacity */
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-image">
+        <main class="login-card">
+            <header class="text-center mb-5">
+                <h1 class="fw-bold h2 mb-2">SCM Companion</h1>
+                <p class="text-secondary small">Enter secure credentials to access logistics intel</p>
+            </header>
+
+            {% if request.query_params.get('error') %}
+            <div class="error-msg" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                </svg>
+                <span><strong>Access Denied:</strong> Invalid credentials.</span>
+            </div>
+            {% endif %}
+
+            <form action="/login" method="post">
+                <div class="mb-4">
+                    <label for="username" class="form-label small text-uppercase fw-bold">Username</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                           placeholder="Enter your username" required autofocus
+                           aria-required="true">
+                </div>
+                <div class="mb-5">
+                    <label for="password" class="form-label small text-uppercase fw-bold">Password</label>
+                    <input type="password" id="password" name="password" class="form-control"
+                           placeholder="••••••••" required
+                           aria-required="true">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-4 shadow">Sign In to Dashboard</button>
+            </form>
+
+            <footer class="text-center">
+                <p class="version-tag small mb-0">Secure Enterprise Environment v1.1</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

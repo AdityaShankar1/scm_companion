@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCM Companion | Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-subtle: #f1f5f9;
+            --header-navy: #0f172a;  /* Deep Navy Blue */
+            --card-base: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --border-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(241, 245, 249, 0.85), rgba(241, 245, 249, 0.95)),
+                        url('/static/bg2.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Dark Navy Header Styling */
+        .header-container {
+            padding: 18px 0;
+            background: var(--header-navy);
+            border-bottom: 3px solid var(--accent-blue); /* Subtle blue underline */
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .system-status {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .card {
+            background: var(--card-base);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .status-pill { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
+        .critical { background: #fee2e2; color: #dc2626; }
+        .healthy { background: #dcfce7; color: #166534; }
+
+        .btn-action {
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            transition: all 0.2s;
+        }
+        .btn-predict { background: var(--accent-blue); color: white; border: none; }
+        .btn-predict:hover { background: #2563eb; transform: translateY(-1px); }
+
+        .btn-delete { background: #f8fafc; color: #94a3b8; border: 1px solid var(--border-light); }
+        .btn-delete:hover { background: #dc2626; color: white; border-color: #dc2626; }
+
+        .form-control { border: 1px solid var(--border-light); padding: 10px; border-radius: 10px; font-size: 0.9rem; }
+
+        #liveClock { color: rgba(255,255,255,0.6); font-family: 'JetBrains Mono', monospace; }
+        .header-title { color: white; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div id="liveClock" class="small">--:--:--</div>
+            <div class="text-center">
+                <div class="system-status mb-1">
+                    <span class="pulse-dot"></span> Core Monitoring Live
+                </div>
+                <h4 class="mb-0 header-title">SCM Companion Intelligence</h4>
+            </div>
+            <a href="/logout" class="btn btn-sm btn-outline-light px-3 fw-bold" style="font-size: 0.7rem; border-color: rgba(255,255,255,0.3);">Log Out</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-4 text-muted small">MARKET VALUATION ENGINE</h6>
+                    <div style="height: 250px;"><canvas id="inventoryChart"></canvas></div>
+                </div>
+
+                <div class="card shadow-sm overflow-hidden">
+                    <div class="p-4 border-bottom d-flex justify-content-between align-items-center bg-white">
+                        <h6 class="fw-bold mb-0">Live Inventory Stream</h6>
+                        <span class="badge bg-primary rounded-pill px-3">{{ products|length }} Active SKUs</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Resource SKU</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th>AI Forecast</th>
+                                    <th class="text-end pe-4">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in products %}
+                                <tr id="row-{{ p.productID }}">
+                                    <td class="ps-4">
+                                        <div class="fw-bold" style="color: #0f172a;">{{ p.name }}</div>
+                                        <div class="text-muted small" style="font-size: 0.7rem;">ID: #{{ p.productID }}</div>
+                                    </td>
+                                    <td class="text-center fw-bold text-primary">
+                                        <span onclick="makeEditable('{{ p.productID }}', '{{ p.price }}')" style="cursor: pointer; border-bottom: 1px dashed #cbd5e1;">${{ p.price }}</span>
+                                    </td>
+                                    <td id="pred-{{ p.productID }}">
+                                        <span class="text-muted small">---</span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group gap-2">
+                                            <button onclick="getForecast('{{ p.productID }}', this)" class="btn btn-action btn-predict">Predict</button>
+                                            <button onclick="deleteProduct('{{ p.productID }}', this)" class="btn btn-action btn-delete">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 text-white shadow-lg" style="background: linear-gradient(135deg, #065f46, #059669);">
+                    <div class="p-4">
+                        <h6 class="fw-bold mb-3">Logistics Optimizer</h6>
+                        <p class="small opacity-90 mb-4">Calculate nearest rail-head hub using spatial indexing.</p>
+                        <button onclick="findHub()" class="btn btn-light w-100 fw-bold py-2 shadow-sm" style="color: #065f46; border: none; border-radius: 10px;">Execute Spatial Query</button>
+                        <div id="hubResult" class="mt-4 p-3 rounded" style="display:none; background: rgba(0,0,0,0.15);">
+                            <div class="small fw-bold mb-1 opacity-75">OPTIMAL NODE:</div>
+                            <div id="hubName" class="h6 mb-1 fw-bold"></div>
+                            <div class="small opacity-90"><span id="hubDist"></span> km away</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-3 text-muted">Register New Asset</h6>
+                    <form action="/add_product" method="post">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">SKU Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Description" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Price ($)</label>
+                            <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 py-2 fw-bold" style="background: #0f172a; border-radius: 10px;">Register Asset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const ctx = document.getElementById('inventoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for p in products %}"{{ p.name }}",{% endfor %}],
+                datasets: [{
+                    label: 'Unit Price',
+                    data: [{% for p in products %}{{ p.price }},{% endfor %}],
+                    backgroundColor: '#10b981',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#64748b', font: { weight: '600' } } }
+                }
+            }
+        });
+
+        async function getForecast(pid, btn) {
+            btn.innerHTML = '...';
+            const res = await fetch(`/forecast/${pid}`);
+            const data = await res.json();
+            const days = data.predicted_days_remaining;
+            const statusClass = days <= 2 ? 'critical' : 'healthy';
+            document.getElementById(`pred-${pid}`).innerHTML = `<span class="status-pill ${statusClass}">${days} Days Stock</span>`;
+            btn.innerHTML = 'Predict';
+        }
+
+        async function findHub() {
+            const res = await fetch('/optimize-logistics/1');
+            const data = await res.json();
+            document.getElementById('hubResult').style.display = 'block';
+            document.getElementById('hubName').innerText = data.name;
+            document.getElementById('hubDist').innerText = data.distance;
+        }
+
+        async function deleteProduct(pid, btn) {
+            if (!confirm("Confirm Asset Removal?")) return;
+            const res = await fetch(`/delete_product/${pid}`, { method: 'DELETE' });
+            if (res.ok) window.location.reload();
+        }
+
+        function makeEditable(pid, oldPrice) {
+            const cell = event.target;
+            const input = document.createElement("input");
+            input.type = "number"; input.value = oldPrice;
+            input.className = "form-control form-control-sm d-inline-block";
+            input.style.width = "90px";
+            input.onblur = async () => {
+                const newPrice = input.value;
+                if (newPrice !== oldPrice) {
+                    const formData = new FormData();
+                    formData.append("price", newPrice);
+                    await fetch(`/update_price/${pid}`, { method: 'PUT', body: formData });
+                    window.location.reload();
+                }
+                cell.innerText = `$${newPrice}`;
+            };
+            cell.innerText = ""; cell.appendChild(input); input.focus();
+        }
+    </script>
+</body>
+</html>
