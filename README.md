@@ -74,3 +74,8 @@ Swagger UI: http://34.100.228.234//docs
 ### Main Page:
 <img width="1470" height="956" alt="Screenshot 2026-01-13 at 12 46 00 AM" src="https://github.com/user-attachments/assets/1ffa2a37-33b7-4a10-a846-8f7e6d474149" />
 
+---
+## Status:
+
+The GCP link is not working now.
+The repo will be marked as Archive/Read-only. 
