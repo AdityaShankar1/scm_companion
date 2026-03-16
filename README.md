@@ -77,5 +77,5 @@ Swagger UI: http://34.100.228.234//docs
 ---
 ## Status:
 
-The GCP link is not working now.
-The repo will be marked as Archive/Read-only. 
+The GCP link is not working now as my free trial has expired. To try this project hands-on I recommend cloning it and running docker compose.
+The repo will be marked as Archive/Read-only. Don't worry, you can still fork it and work on this concept if you find it interesting!
